@@ -1,0 +1,28 @@
+{
+  "name": "DSS",
+  "version": "1.0.0",
+  "description": "Devourer Statistic Server",
+  "main": "dss.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Insality/DSS.git"
+  },
+  "keywords": [
+    "statistics",
+    "server",
+    "node"
+  ],
+  "author": "Insality",
+  "license": "GPLv2",
+  "bugs": {
+    "url": "https://github.com/Insality/DSS/issues"
+  },
+  "homepage": "https://github.com/Insality/DSS",
+  "dependencies": {
+    "express": "^4.13.3",
+    "log4js": "^0.6.27"
+  }
+}
