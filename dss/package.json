@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/Insality/DSS",
   "dependencies": {
+    "body-parser": "^1.14.1",
     "express": "^4.13.3",
+    "json": "^9.0.3",
     "log4js": "^0.6.27"
   }
 }
