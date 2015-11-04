@@ -33,7 +33,7 @@ function GetTimeNow(){
 }
 
 function AddMetadata(o){
-	o["Date"] = GetTimeNow();
+	o["date"] = GetTimeNow();
 }
 
 module.exports.GetErrorMessage = GetErrorMessage;

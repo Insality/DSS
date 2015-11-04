@@ -9,26 +9,27 @@ log = log4js.getLogger();
 function LoadConfiguration(confName){
 	log.info();
 	try {
-		var json = JSON.parse(fs.readFileSync(confName, "utf8"));
+		var app = JSON.parse(fs.readFileSync(confName, "utf8"));
 	} catch (e) {
 		log.info("The configuration file " + path.basename(confName) + " is invalid.");
 		return;
 	}
 
-	log.info("Loading app: " + json["app_name"]);
+	log.info("Loading app: " + app["app_name"]);
 
-	json["app_events"].forEach(function(e){
-		var eventUrl = "/"+json["app_name"]+"/"+e["event_name"];
+	app["app_events"].forEach(function(e){
+		var eventUrl = "/"+app["app_name"]+"/"+e["event_name"];
 		log.info("Registering event: " + eventUrl);
 
 		server.get(eventUrl, function(req, res){
-			handlers.StandartEventGet(req, res, e)
+			handlers.StandartEventGet(req, res, e, app)
 		});
 
 		server.post(eventUrl, function(req, res){
-			handlers.StandartEventPost(req, res, e);
+			handlers.StandartEventPost(req, res, e, app);
 		});
 	});
+	return app;
 };
 
 
