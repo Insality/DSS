@@ -21,7 +21,7 @@ function Put(app, eventName, json){
 	var record = database.collection(tableName);
 	record.insert(json, function(err, result){
 		if (err) throw err;
-		log.info("Insered record to " + tableName);
+		log.info("Insered record " + JSON.stringify(json) + " to " + tableName);
 	});
 }
 

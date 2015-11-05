@@ -14,7 +14,7 @@ Devourer Statistic Server - multi-app statistic server with easy configuration b
 ```json
 {
 	"app_name": "test_name",
-	"app_pass": "test",
+	"app_key": "test",
 	"app_is_show": true,
 
 	"app_events": [
@@ -33,6 +33,8 @@ Devourer Statistic Server - multi-app statistic server with easy configuration b
 ### DSS Response code:
 - **20** JSON is not valid
 - **21** JSON dont have required fields (Details: which one field)
+- **25** The app key is invalid
+
 
 ### License
 GPLv2

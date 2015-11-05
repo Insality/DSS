@@ -9,15 +9,19 @@ function StandartEventGet(req, res, e, app){
 		req.body = req.query;
 		StandartEventPost(req, res, e, app);
 	} else{
-		res.send("Event required fields: " + e["event_fields"]);
+		res.send(utils.GetInfoMessage("Event required fields: " + e["event_fields"]));
 	}
 };
 
 
 function StandartEventPost(req, res, e, app){
 	var eventKeys = e["event_fields"];
-	var errorKey = [];
-	if (utils.EventJsonIsValid(req.body, eventKeys, errorKey)){
+	var errorMsg = [];
+	if (utils.EventJsonIsValid(req.body, eventKeys, errorMsg)){
+		if (!CheckPassword(req.body, app)) {
+			res.send(utils.GetErrorMessage(25));
+			return;
+		}
 		var newJson = {};
 		for (index in eventKeys){
 			var key = eventKeys[index];
@@ -25,12 +29,23 @@ function StandartEventPost(req, res, e, app){
 		}
 		utils.AddMetadata(newJson);
 		dbController.Put(app["app_name"], e["event_name"], newJson);
-		res.send(JSON.stringify(newJson));
+		res.send(utils.GetOkMessage());
 	} else {
-		res.send(utils.GetErrorMessage(21, "No key: " + errorKey));
+		res.send(utils.GetErrorMessage(21, errorMsg));
 	}
 };
 
+
+function CheckPassword(json, app){
+	if (Boolean(app["app_key"])){
+		if (json["app_key"] === app["app_key"]){
+			return true;
+		} else{
+			return false;	
+		}
+	}
+	return true;
+}
 
 module.exports.StandartEventPost = StandartEventPost;
 module.exports.StandartEventGet = StandartEventGet;
