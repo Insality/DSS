@@ -16,7 +16,8 @@ function StandartEventGet(req, res, e, app){
 
 function StandartEventPost(req, res, e, app){
 	var eventKeys = e["event_fields"];
-	if (utils.EventJsonIsValid(req.body, eventKeys)){
+	var errorKey = [];
+	if (utils.EventJsonIsValid(req.body, eventKeys, errorKey)){
 		var newJson = {};
 		for (index in eventKeys){
 			var key = eventKeys[index];
@@ -26,7 +27,7 @@ function StandartEventPost(req, res, e, app){
 		dbController.Put(app["app_name"], e["event_name"], newJson);
 		res.send(JSON.stringify(newJson));
 	} else {
-		res.send(utils.GetErrorMessage(21));
+		res.send(utils.GetErrorMessage(21, "No key: " + errorKey));
 	}
 };
 

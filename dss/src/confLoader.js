@@ -6,7 +6,7 @@ var fs = require('fs'),
 log = log4js.getLogger();
 
 
-function LoadConfiguration(confName){
+function LoadConfiguration(confName, server){
 	log.info();
 	try {
 		var app = JSON.parse(fs.readFileSync(confName, "utf8"));

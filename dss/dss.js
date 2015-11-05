@@ -27,7 +27,7 @@ var confs = loader.GetConfigurationsList(__dirname);
 log.info("Loading configurations:");
 log.info("=======================");
 confs.forEach(function(confName){
-	loader.LoadConfiguration(confName);
+	loader.LoadConfiguration(confName, server);
 });
 
 // ====================

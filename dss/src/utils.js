@@ -17,10 +17,11 @@ function GetErrorMessage(errorCode, details){
 	return errorMsg;
 }
 
-function EventJsonIsValid(requestJson, eventKeys){
+function EventJsonIsValid(requestJson, eventKeys, errorKey){
 	for (index in eventKeys){
 		key = eventKeys[index];
 		if (!(key in requestJson)){
+			errorKey.push(key);
 			return false;
 		}
 	}
