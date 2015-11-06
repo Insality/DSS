@@ -13,18 +13,22 @@ Devourer Statistic Server - multi-app statistic server with easy configuration b
 
 ```json
 {
-	"app_name": "test_name",
-	"app_key": "test",
+	"app_name": "test_name", // required field
+	"app_key": "test", 
 	"app_is_show": true,
 
-	"app_events": [
+	"app_events": [ // required field
 		{
-			"event_name": "simple_request",
-			"event_fields": ["username"]
+			"event_name": "simple_request", // required field
+			"event_fields_unique" : [], // required field
+			"event_fields_required" : ["event"], // required field
+			"event_fields_optional" : ["version"] // required field
 		},
 		{
 			"event_name": "chat",
-			"event_fields": ["username", "message"]
+			"event_fields_unique" : ["username"],
+			"event_fields_required" : ["message"],
+			"event_fields_optional" : ["version"]
 		}
 	]
 }

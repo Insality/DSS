@@ -16,19 +16,42 @@ function Connect(uri){
 }
 
 
-function Put(app, eventName, json){
-	var tableName = app + '.' + eventName;
+function Put(app, eventName, json, eventKeys){
+	var tableName = GetTableName(app, eventName);
 	var record = database.collection(tableName);
-	record.insert(json, function(err, result){
+
+	// check unique:
+	var uniquePart = {};
+	var isHaveUniquePart = false;
+	for (index in eventKeys["unique"]) {
+		var k = eventKeys["unique"][index];
+		uniquePart[k] = json[k];
+		isHaveUniquePart = true;
+	};
+
+	record.updateOne(uniquePart, {$set: json}, function(err, r){
 		if (err) throw err;
-		log.info("Insered record " + JSON.stringify(json) + " to " + tableName);
-	});
+
+		if (r.matchedCount === 0 || !isHaveUniquePart ){
+			record.insert(json, function(err, result){
+				if (err) throw err;
+				log.info("Insered record " + JSON.stringify(json) + " to " + tableName);
+			});
+		} else{
+			log.info("Updated record " + JSON.stringify(json) + " in " + tableName);
+		};
+	})
 }
 
 
 function CloseConnection(){
 	database.close();
 	log.info("Closing MongoDB connection");
+}
+
+
+function GetTableName(app, eventName){
+	return app + '.' + eventName;
 }
 
 

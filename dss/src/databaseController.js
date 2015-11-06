@@ -9,8 +9,8 @@ adapter.Connect(uri);
 process.on("exit", CloseConnection.bind());
 process.on("SIGINT", CloseConnection.bind());
 
-function Put(app, eventName, json){
-	adapter.Put(app, eventName, json);
+function Put(app, eventName, json, eventKeys){
+	adapter.Put(app, eventName, json, eventKeys);
 }
 
 function CloseConnection(){

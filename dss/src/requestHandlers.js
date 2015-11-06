@@ -9,26 +9,39 @@ function StandartEventGet(req, res, e, app){
 		req.body = req.query;
 		StandartEventPost(req, res, e, app);
 	} else{
-		res.send(utils.GetInfoMessage("Event required fields: " + e["event_fields"]));
+		var eventWiki = "";
+		if (e["event_fields_unique"]) eventWiki += "Event unique fields: " + e["event_fields_unique"] + ". ";
+		if (e["event_fields_required"]) eventWiki += "Event required fields: " + e["event_fields_required"] + ". ";
+		if (e["event_fields_optional"]) eventWiki += "Event optional fields: " + e["event_fields_optional"] + ".";
+		res.send(utils.GetInfoMessage(eventWiki));
 	}
 };
 
 
 function StandartEventPost(req, res, e, app){
-	var eventKeys = e["event_fields"];
+	var eventKeys = {
+		"unique": e["event_fields_unique"],
+		"required": e["event_fields_required"],
+		"optional": e["event_fields_optional"]
+	};
 	var errorMsg = [];
+	
 	if (utils.EventJsonIsValid(req.body, eventKeys, errorMsg)){
 		if (!CheckPassword(req.body, app)) {
 			res.send(utils.GetErrorMessage(25));
 			return;
 		}
 		var newJson = {};
-		for (index in eventKeys){
-			var key = eventKeys[index];
-			newJson[key] = req.body[key];
+		var requiredFields = eventKeys["unique"].concat(eventKeys["required"], eventKeys["optional"]);
+		for (index in requiredFields){
+			var key = requiredFields[index];
+			newJson[key] = "";
+			if (req.body[key]) {
+				newJson[key] = req.body[key];
+			}
 		}
 		utils.AddMetadata(newJson);
-		dbController.Put(app["app_name"], e["event_name"], newJson);
+		dbController.Put(app["app_name"], e["event_name"], newJson, eventKeys);
 		res.send(utils.GetOkMessage());
 	} else {
 		res.send(utils.GetErrorMessage(21, errorMsg));
@@ -41,7 +54,7 @@ function CheckPassword(json, app){
 		if (json["app_key"] === app["app_key"]){
 			return true;
 		} else{
-			return false;	
+			return false;
 		}
 	}
 	return true;

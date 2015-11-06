@@ -42,8 +42,9 @@ function GetErrorMessage(errorCode, details){
 
 function EventJsonIsValid(requestJson, eventKeys, errorMsg){
 	// Check requestJson have every required keys (in eventKeys)
-	for (index in eventKeys){
-		key = eventKeys[index];
+	var requiredFields = eventKeys["unique"].concat(eventKeys["required"]);
+	for (index in requiredFields){
+		key = requiredFields[index];
 		if (!(key in requestJson)){
 			errorMsg.push("No key: " + key);
 			return false;
