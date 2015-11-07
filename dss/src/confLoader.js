@@ -15,7 +15,16 @@ function LoadConfiguration(confName, server){
 		return;
 	}
 
+	server.apps.push(app);
 	log.info("Loading app: " + app["app_name"]);
+
+	server.get("/" + app["app_name"], function(req, res){
+		var eventNames = [];
+		app["app_events"].forEach(function(ev){
+			eventNames.push(ev["event_name"]);
+		})
+		res.send({"response": eventNames});
+	});
 
 	app["app_events"].forEach(function(e){
 		var eventUrl = "/"+app["app_name"]+"/"+e["event_name"];
@@ -28,6 +37,17 @@ function LoadConfiguration(confName, server){
 		server.post(eventUrl, function(req, res){
 			handlers.StandartEventPost(req, res, e, app);
 		});
+
+		// loading stats:
+		var statNames = [];
+		e["event_stats"].forEach(function(stat){
+			statNames.push(stat["stat_name"]);
+		})
+
+		// stat list send:
+		server.get(eventUrl+"/stat", function(req, res){
+			res.send({"response": statNames});
+		})
 	});
 	return app;
 };

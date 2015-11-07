@@ -1,0 +1,7 @@
+body {
+	background: url("../static/back.png");
+}
+
+.button_selected {
+	border: 2px solid blue;
+}

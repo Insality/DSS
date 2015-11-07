@@ -21,6 +21,16 @@ server.use(function (error, req, res, next) {
 	}
 });
 
+var allowCrossDomain = function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Methods', 'GET,POST');
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Key');
+	next();
+}
+server.use(allowCrossDomain);
+
+server.apps = [];
+
 log.info("Devourer Statistic Server started");
 var confs = loader.GetConfigurationsList(__dirname);
 
@@ -29,6 +39,14 @@ log.info("=======================");
 confs.forEach(function(confName){
 	loader.LoadConfiguration(confName, server);
 });
+
+server.get("/", function(req, res){
+	var names = [];
+	server.apps.forEach(function(app){
+		names.push(app["app_name"]);
+	})
+	res.send({"response": names});
+})
 
 // ====================
 // Connections settings
