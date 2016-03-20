@@ -66,7 +66,7 @@ function GetTimeNow(){
 }
 
 function AddMetadata(o){
-	o["date"] = GetTimeNow();
+	o["date"] = new Date();
 }
 
 module.exports.GetOkMessage = GetOkMessage;

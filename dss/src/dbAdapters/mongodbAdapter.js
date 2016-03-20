@@ -43,18 +43,33 @@ function Put(app, eventName, json, eventKeys){
 	})
 }
 
-function Get(app, eventName, eventKeys, callback){
+function Get(app, eventName, eventKeys, filter, callback){
 	var tableName = GetTableName(app, eventName);
 	var record = database.collection(tableName);
 
 	var result = {"data": []};
 
-	filter = {"_id": 0};
+	filterValues = {"_id": 0};
 	eventKeys.forEach(function(item){
-		filter[item] = 1;
+		filterValues[item] = 1;
 	})
 
-	var cursor = record.find({}, filter );
+	options = filter["options"] ? options : {};
+	var isCount = ("count" in options) ? true : false;
+	delete options["count"]
+	delete filter["options"];
+
+
+	var cursor = record.find(filter, filterValues, options);
+
+	if (isCount){
+		cursor.count(function(err, count){
+			if (err) throw err;
+			callback({"count": count});
+		})
+		return;
+	}
+	
 	cursor.each(function(err, doc){
 		if (err) throw err;
 
