@@ -9,30 +9,13 @@ function StandartEventGet(req, res, e, app){
 		req.body = req.query;
 		StandartEventPost(req, res, e, app);
 	} else {
-		/*
-		var eventWiki = "";
-		if (e["event_fields_unique"]) eventWiki += "Event unique fields: " + e["event_fields_unique"] + ". ";
-		if (e["event_fields_required"]) eventWiki += "Event required fields: " + e["event_fields_required"] + ". ";
-		if (e["event_fields_optional"]) eventWiki += "Event optional fields: " + e["event_fields_optional"] + ".";
-		*/
 		var eventKeys = GetAllEventKeys(e);
-		console.log("Get event keys:" + eventKeys);
 
-		dbController.Get(app["app_name"], e["event_name"], eventKeys, function(data){
+		dbController.Get(app["app_name"], e["event_name"], eventKeys, {}, function(data){
 			res.send(data);
 		});
-
-		// res.send(result);
 	}
 };
-
-function GetAllEventKeys(e){
-	var result = [];
-	result = result.concat(e["event_fields_unique"]);
-	result = result.concat(e["event_fields_required"]);
-	result = result.concat(e["event_fields_optional"]);
-	return result;
-}
 
 
 function StandartEventPost(req, res, e, app){
@@ -66,6 +49,99 @@ function StandartEventPost(req, res, e, app){
 };
 
 
+function StandartEventStatGet(req, res, e, app, stat){
+	var eventKeys = GetAllEventKeys(e);
+	// eventKeys.push("date");
+
+	filter = {};
+	filter["options"] = {};
+	filter["options"]["sort"] = [];
+	var funcs = stat["stat_fun"].split("=>");
+	funcs.forEach(function(item){
+		var funcName = item.split("(")[0];
+
+		var withoutLastBracket = item.replace(")", "");
+		var args = withoutLastBracket.split("(");
+		args.shift();
+
+		console.log(funcName);
+		console.log("Args:" + args)
+
+		var startDate = new Date();
+		var endDate = new Date();
+		switch (funcName){
+			case "Last":
+				switch(args[0]){
+					case "hour":
+						startDate.setHours(startDate.getHours()-1);
+						break;
+					case "day":
+						startDate.setDate(startDate.getDate()-1);
+						break;
+					case "week":
+						startDate.setDate(startDate.getDate()-7);
+						break;
+					case "month":
+						startDate.setMonth(startDate.getMonth()-1);
+						break;
+					case "year":
+						startDate.setFullYear(startDate.getFullYear()-1);
+						break;
+				}
+				filter["date"] = {"$gte": startDate};
+				break;
+			case "Period":
+				break;
+			case "Count":
+				break;
+			case "Limit":
+				filter["options"]["limit"] = args[0];
+				break;
+			case "Max":
+				filter["options"]["sort"].push([args[0], "desc"])
+				filter["options"]["limit"] = 1;
+				break;
+			case "Min":
+				filter["options"]["sort"].push([args[0], "asc"])
+				filter["options"]["limit"] = 1;
+				break;
+			case "Sort":
+				filter["options"]["sort"].push([args[0], "asc"])
+				break;
+			case "SortReversed":
+				filter["options"]["sort"].push([args[0], "desc"])
+				break;
+			default:
+				console.log("[Error]: Unknow func name: " + funcName);
+		}
+	});
+	
+	console.log("filter: " + filter) 
+
+	dbController.Get(app["app_name"], e["event_name"], eventKeys, filter, function(data){
+		res.send(data);
+	});
+};
+
+function GetEventKeysInfo(req, res, e, app){
+	var eventWiki = "";
+	if (e["event_fields_unique"]) eventWiki += "Event unique fields: " + e["event_fields_unique"] + ".  ";
+	if (e["event_fields_required"]) eventWiki += "Event required fields: " + e["event_fields_required"] + ".  ";
+	if (e["event_fields_optional"]) eventWiki += "Event optional fields: " + e["event_fields_optional"] + ".";
+	
+	res.send(eventWiki);
+}
+
+
+function GetAllEventKeys(e){
+	var result = [];
+	result = result.concat(e["event_fields_unique"]);
+	result = result.concat(e["event_fields_required"]);
+	result = result.concat(e["event_fields_optional"]);
+	return result;
+}
+
+
 function CheckPassword(json, app){
 	if (Boolean(app["app_key"])){
 		if (json["app_key"] === app["app_key"]){
@@ -79,3 +155,5 @@ function CheckPassword(json, app){
 
 module.exports.StandartEventPost = StandartEventPost;
 module.exports.StandartEventGet = StandartEventGet;
+module.exports.GetEventKeysInfo = GetEventKeysInfo;
+module.exports.StandartEventStatGet = StandartEventStatGet;

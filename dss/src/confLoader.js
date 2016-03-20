@@ -42,11 +42,20 @@ function LoadConfiguration(confName, server){
 		var statNames = [];
 		e["event_stats"].forEach(function(stat){
 			statNames.push(stat["stat_name"]);
+
+			server.get(eventUrl + "/" + stat["stat_name"], function(req, res){
+				handlers.StandartEventStatGet(req, res, e, app, stat);
+			})
 		})
 
 		// stat list send:
 		server.get(eventUrl+"/stat", function(req, res){
 			res.send({"response": statNames});
+		})
+
+		// wiki event send:
+		server.get(eventUrl + "/wiki", function(req, res){
+			res.send(handlers.GetEventKeysInfo(req, res, e, app));
 		})
 	});
 	return app;
