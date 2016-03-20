@@ -54,10 +54,22 @@ function Get(app, eventName, eventKeys, filter, callback){
 		filterValues[item] = 1;
 	})
 
-	options = filter["options"];
+	options = filter["options"] ? options : {};
+	var isCount = ("count" in options) ? true : false;
+	delete options["count"]
 	delete filter["options"];
 
+
 	var cursor = record.find(filter, filterValues, options);
+
+	if (isCount){
+		cursor.count(function(err, count){
+			if (err) throw err;
+			callback({"count": count});
+		})
+		return;
+	}
+	
 	cursor.each(function(err, doc){
 		if (err) throw err;
 

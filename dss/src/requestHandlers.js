@@ -64,9 +64,6 @@ function StandartEventStatGet(req, res, e, app, stat){
 		var args = withoutLastBracket.split("(");
 		args.shift();
 
-		console.log(funcName);
-		console.log("Args:" + args)
-
 		var startDate = new Date();
 		var endDate = new Date();
 		switch (funcName){
@@ -93,6 +90,7 @@ function StandartEventStatGet(req, res, e, app, stat){
 			case "Period":
 				break;
 			case "Count":
+				filter["options"]["count"] = true;
 				break;
 			case "Limit":
 				filter["options"]["limit"] = args[0];
@@ -115,8 +113,6 @@ function StandartEventStatGet(req, res, e, app, stat){
 				console.log("[Error]: Unknow func name: " + funcName);
 		}
 	});
-	
-	console.log("filter: " + filter) 
 
 	dbController.Get(app["app_name"], e["event_name"], eventKeys, filter, function(data){
 		res.send(data);
