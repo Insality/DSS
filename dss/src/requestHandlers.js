@@ -8,14 +8,31 @@ function StandartEventGet(req, res, e, app){
 	if (Object.keys(req.query).length != 0){
 		req.body = req.query;
 		StandartEventPost(req, res, e, app);
-	} else{
+	} else {
+		/*
 		var eventWiki = "";
 		if (e["event_fields_unique"]) eventWiki += "Event unique fields: " + e["event_fields_unique"] + ". ";
 		if (e["event_fields_required"]) eventWiki += "Event required fields: " + e["event_fields_required"] + ". ";
 		if (e["event_fields_optional"]) eventWiki += "Event optional fields: " + e["event_fields_optional"] + ".";
-		res.send(utils.GetInfoMessage(eventWiki));
+		*/
+		var eventKeys = GetAllEventKeys(e);
+		console.log("Get event keys:" + eventKeys);
+
+		dbController.Get(app["app_name"], e["event_name"], eventKeys, function(data){
+			res.send(data);
+		});
+
+		// res.send(result);
 	}
 };
+
+function GetAllEventKeys(e){
+	var result = [];
+	result = result.concat(e["event_fields_unique"]);
+	result = result.concat(e["event_fields_required"]);
+	result = result.concat(e["event_fields_optional"]);
+	return result;
+}
 
 
 function StandartEventPost(req, res, e, app){

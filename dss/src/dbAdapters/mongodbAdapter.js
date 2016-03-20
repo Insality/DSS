@@ -43,6 +43,29 @@ function Put(app, eventName, json, eventKeys){
 	})
 }
 
+function Get(app, eventName, eventKeys, callback){
+	var tableName = GetTableName(app, eventName);
+	var record = database.collection(tableName);
+
+	var result = {"data": []};
+
+	filter = {"_id": 0};
+	eventKeys.forEach(function(item){
+		filter[item] = 1;
+	})
+
+	var cursor = record.find({}, filter );
+	cursor.each(function(err, doc){
+		if (err) throw err;
+
+		if (doc != null){
+			result["data"].push(doc);
+		} else {
+			callback(result["data"]);
+		}
+	})
+}
+
 
 function CloseConnection(){
 	database.close();
@@ -54,7 +77,7 @@ function GetTableName(app, eventName){
 	return app + '.' + eventName;
 }
 
-
 module.exports.Connect = Connect;
 module.exports.Put = Put;
+module.exports.Get = Get;
 module.exports.CloseConnection = CloseConnection;

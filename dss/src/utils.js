@@ -57,8 +57,6 @@ function EventJsonIsValid(requestJson, eventKeys, errorMsg){
 		}
 	}
 
-	
-
 	return true;
 }
 
