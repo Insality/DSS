@@ -1,0 +1,21 @@
+<div ng-controller="eventsDataCtrl">
+
+    <nav class="breadcrumbs">
+        <a href="#/">Applications</a> / <a href="#/app/{{app_name}}">Events</a>
+    </nav>
+
+    <h2>Events data:</h2>
+
+    <div class="events-data">
+        <table class="events-data__table">
+            <tr>
+                <th ng-repeat="ev_data_key in event_data_head">{{ev_data_key}}</th>
+            </tr>
+            <tr ng-repeat="ev_data in event_data_list">
+                <td ng-repeat="ev_data_key in event_data_head">
+                    {{ev_data[ev_data_key]}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

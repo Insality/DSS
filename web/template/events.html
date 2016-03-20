@@ -1,0 +1,15 @@
+<div ng-controller="eventsCtrl">
+    <nav class="breadcrumbs">
+        <a href="#/">Applications</a>
+    </nav>
+
+    <h2>Events of {{ app_name }}</h2>
+
+    <div class="events">
+        <ul class="events__list">
+            <li ng-repeat="ev in event_list" class="events__item">
+                <a href="#/app/{{ app_name }}/{{ ev }}" class="events__link"> {{ ev }}</a>
+            </li>
+        </ul>
+    </div>
+</div>

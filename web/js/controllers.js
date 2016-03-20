@@ -1,8 +1,8 @@
 'use strict';
 
-var dssApp = angular.module("dssApp", []);
+var dssApp = angular.module("dssApp", ['ngRoute']);
 
-
+/*
 dssApp.controller("DssCtrl", function ($scope, $http) {
 
     $scope.cur_app_name = "";
@@ -45,4 +45,55 @@ dssApp.controller("DssCtrl", function ($scope, $http) {
             $scope.stat_list = data["response"];
         }).error(function () {});
     };
+});
+*/
+
+dssApp.controller("applicationsCtrl", function ($scope, $http) {
+    $http.get("http://localhost:7550/").success(function (data, status, headers, config) {
+        $scope.app_list = data["response"];
+    }).error(function () {});
+});
+
+dssApp.controller("eventsCtrl", function ($scope, $http, $routeParams) {
+    var cur_app = $routeParams.cur_app;
+    $scope.app_name = cur_app;
+    $http.get("http://localhost:7550/" + cur_app).success(function (data, status, headers, config) {
+        $scope.event_list = data["response"];
+    }).error(function () {});
+});
+
+
+dssApp.controller("eventsDataCtrl", function ($scope, $http, $routeParams) {
+    var cur_app = $routeParams.cur_app,
+        cur_event = $routeParams.cur_event;
+    $scope.app_name = cur_app;
+    $http.get("http://localhost:7550/" + cur_app + "/" + cur_event).success(function (data, status, headers, config) {
+        $scope.event_data_list = data;
+        if (data[0]) {
+            $scope.event_data_head = Object.keys(data[0]);
+        }
+        console.log(data);
+    }).error(function () {});
+
+});
+
+
+dssApp.config(function ($routeProvider, $locationProvider) {
+    var templatePath = "template/";
+    $routeProvider
+        .when('/', {
+            templateUrl: templatePath + 'applications.html',
+            controller: 'applicationsCtrl'
+        })
+        .when('/app/:cur_app', {
+            templateUrl: templatePath + 'events.html',
+            controller: 'eventsCtrl'
+        })
+        .when('/app/:cur_app/:cur_event', {
+            templateUrl: templatePath + 'events_data.html',
+            controller: 'eventsDataCtrl'
+        })
+        .otherwise({
+            redirectTo: '/'
+        });
 });

@@ -1,0 +1,9 @@
+<h2>Applications</h2>
+
+<div class="apps" ng-controller="applicationsCtrl">
+    <ul class="apps__list">
+        <li class="apps__item" ng-repeat="app in app_list">
+            <a class="apps__link" href="#/app/{{ app }}">{{ app }}</a>
+        </li>
+    </ul>
+</div>
