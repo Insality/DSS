@@ -1,41 +1,55 @@
 <!doctype html>
 <html lang="en" ng-app="dssApp">
+
 <head>
-	<meta charset="utf-8">
-	<title>Devourer Statistic Server</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/base.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
-	<script src="js/controllers.js"></script>
+    <meta charset="utf-8">
+    <title>Devourer Statistic Server</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/base.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+    <script src="js/controllers.js"></script>
 </head>
 
 <body ng-controller="DssCtrl">
 
-<div class="container">
-	<div class="span9 text-center">
-		<h1 id="title"> <a href="https://github.com/Insality/DSS/" target="_blank">Devourer Statistic Server</a></h1>
+    <div class="container">
+        <div class="span9 text-center">
+            <h1 id="title"> <a href="https://github.com/Insality/DSS/" target="_blank">Devourer Statistic Server</a></h1>
 
-		<hr>
-		Applications <br>
-		<div class="btn-group" role="group">
-			<button ng-repeat="app in app_list" 
-				type="button" class="btn btn-default" ng-click="loadEvents(app)">{{ app }}</button>
-		</div>
-		<hr>
-		Events: <br>
-		<div class="btn-group" role="group">
-			<button ng-repeat="ev in event_list" 
-				type="button" class="btn btn-default" ng-click="loadStats(ev)">{{ ev }}</button>
-		</div>
-		<hr>
-		Stats: <br>
-		<div class="btn-group" role="group">
-			<button ng-repeat="stat in stat_list" 
-				type="button" class="btn btn-default" ng-model="cur_stat">{{ stat }}</button>
-		</div>
-	</div>
+            <hr> Applications
+            <br>
+            <div class="btn-group" role="group">
+                <button ng-repeat="app in app_list" type="button" class="btn btn-default" ng-click="loadEvents(app)">{{ app }}</button>
+            </div>
+            <hr> Events:
+            <br>
+            <div class="btn-group" role="group">
+                <button ng-repeat="ev in event_list" type="button" class="btn btn-default" ng-click="loadEventData(ev)">{{ ev }}</button>
+            </div>
+            <hr> Events data:
+            <br>
+            <div class="events-data">
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th ng-repeat="ev_data_key in event_data_head">{{ev_data_key}}</th>
+                    </tr>
+                    <tr ng-repeat="ev_data in event_data_list">
+                        <td ng-repeat="ev_data_key in event_data_head">
+                            {{ev_data[ev_data_key]}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <hr>
+            <hr> Stats:
+            <br>
+            <div class="btn-group" role="group">
+                <button ng-repeat="stat in stat_list" type="button" class="btn btn-default" ng-model="cur_stat">{{ stat }}</button>
+            </div>
+        </div>
 
-</div>
+    </div>
 
 </body>
+
 </html>
