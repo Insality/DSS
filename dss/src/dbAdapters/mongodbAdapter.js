@@ -54,11 +54,10 @@ function Get(app, eventName, eventKeys, filter, callback){
 		filterValues[item] = 1;
 	})
 
-	options = filter["options"] ? options : {};
+	options = filter["options"] ? filter["options"] : {};
 	var isCount = ("count" in options) ? true : false;
 	delete options["count"]
 	delete filter["options"];
-
 
 	var cursor = record.find(filter, filterValues, options);
 
