@@ -7,7 +7,10 @@ var uri = settings.connectionURL;
 adapter.Connect(uri);
 
 process.on("exit", CloseConnection.bind());
-process.on("SIGINT", CloseConnection.bind());
+process.on("SIGINT", function(){
+	CloseConnection.bind();
+	process.exit();
+});
 
 function Put(app, eventName, json, eventKeys){
 	adapter.Put(app, eventName, json, eventKeys);
