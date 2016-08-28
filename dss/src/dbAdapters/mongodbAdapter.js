@@ -29,18 +29,25 @@ function Put(app, eventName, json, eventKeys){
 		isHaveUniquePart = true;
 	};
 
-	record.updateOne(uniquePart, {$set: json}, function(err, r){
-		if (err) throw err;
+	if (isHaveUniquePart) }
+		record.updateOne(uniquePart, {$set: json}, function(err, r){
+			if (err) throw err;
 
-		if (r.matchedCount === 0 || !isHaveUniquePart ){
-			record.insert(json, function(err, result){
-				if (err) throw err;
-				log.info("Insered record " + JSON.stringify(json) + " to " + tableName);
-			});
-		} else{
-			log.info("Updated record " + JSON.stringify(json) + " in " + tableName);
-		};
-	})
+			if (r.matchedCount === 0 || !isHaveUniquePart ){
+				record.insert(json, function(err, result){
+					if (err) throw err;
+					log.info("Insered record " + JSON.stringify(json) + " to " + tableName);
+				});
+			} else{
+				log.info("Updated record " + JSON.stringify(json) + " in " + tableName);
+			};
+		})
+	} else {
+		record.insert(json, function(err, result){
+			if (err) throw err;
+			log.info("Insered record " + JSON.stringify(json) + " to " + tableName);
+		});
+	}
 }
 
 function Get(app, eventName, eventKeys, filter, callback){
