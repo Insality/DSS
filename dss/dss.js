@@ -3,7 +3,8 @@ var fs = require('fs'),
 	express = require('express'),
 	bodyParser = require('body-parser')
 	utils = require('./src/utils'),
-	loader = require('./src/confLoader');
+	loader = require('./src/confLoader'),
+	cors = require('cors');
 
 // Log can be: debug, info, warn, error, fatal, trace
 log = log4js.getLogger();
@@ -11,6 +12,7 @@ log = log4js.getLogger();
 // Server configuration
 server = express();
 server.use(bodyParser.json());
+server.use(cors());
 
 // Only JSON aviable in post:
 server.use(function (error, req, res, next) {
