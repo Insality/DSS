@@ -29,7 +29,7 @@ function Put(app, eventName, json, eventKeys){
 		isHaveUniquePart = true;
 	};
 
-	if (isHaveUniquePart) }
+	if (isHaveUniquePart) {
 		record.updateOne(uniquePart, {$set: json}, function(err, r){
 			if (err) throw err;
 
