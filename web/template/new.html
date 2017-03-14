@@ -1,0 +1,33 @@
+<hr> New Application:
+<br>
+<div class="btn-group" role="group">
+	<form novalidate class="simple-form">
+    <label><b>Application name:</b> <input type="text" /></label><br />
+    <label>Key: <input type="text" /></label><br />
+    <label>Is show: <input type="checkbox" /></label><br />
+
+	<input type="button" ng-click="reset()" value="Add event" /> <br />
+    <label>Events: </label><br />
+
+	----<br/>
+	<label><b>Event name: </b><input type="text" /></label><br />
+	<label>Unique fields: <input type="text" /></label><br />
+	<label>Required Fields: <input type="text" /></label><br />
+	<label>Optional Fields: <input type="text" /></label><br />
+
+	<label>Stats:</label><br />
+	<input type="button" ng-click="reset()" value="Add stats" /> <br />
+	--------<br/>
+	<label><b>Stat name: </b><input type="text" /></label><br />
+	<label>Description: <input type="text" /></label><br />
+	<label>Type:</label><br />
+	<label><input type="radio" ng-model="stat.type" value="table" />table</label>
+    <label><input type="radio" ng-model="stat.type" value="graph" />graph</label><br />
+	<label>Function: <input type="text" /></label><br />
+	--------<br/>
+	----<br/>
+
+    <input type="button" ng-click="reset()" value="Reset" />
+    <input type="submit" ng-click="update(user)" value="Save" />
+  </form>
+</div>

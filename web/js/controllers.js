@@ -77,6 +77,10 @@ dssApp.controller("eventsDataCtrl", function ($scope, $http, $routeParams) {
 
 });
 
+dssApp.controller("newAppCtrl", function ($scope, $http, $routeParams) {
+    console.log("success");
+});
+
 
 dssApp.config(function ($routeProvider, $locationProvider) {
     var templatePath = "template/";
@@ -92,6 +96,10 @@ dssApp.config(function ($routeProvider, $locationProvider) {
         .when('/app/:cur_app/:cur_event', {
             templateUrl: templatePath + 'events_data.html',
             controller: 'eventsDataCtrl'
+        })
+         .when('/new', {
+            templateUrl: templatePath + 'new.html',
+            controller: 'newAppCtrl'
         })
         .otherwise({
             redirectTo: '/'
