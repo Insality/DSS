@@ -47,6 +47,11 @@ dssApp.controller("DssCtrl", function ($scope, $http) {
     };
 });
 */
+google.charts.setOnLoadCallback(function() {
+    // angular.bootstrap(document.body, ['myApp']);
+});
+google.charts.load('current', {packages: ['table']});
+
 
 dssApp.controller("applicationsCtrl", function ($scope, $http) {
     $http.get("http://localhost:7550/").success(function (data, status, headers, config) {
@@ -72,10 +77,44 @@ dssApp.controller("eventsDataCtrl", function ($scope, $http, $routeParams) {
         if (data[0]) {
             $scope.event_data_head = Object.keys(data[0]);
         }
-        console.log(data);
     }).error(function () {});
-
 });
+
+dssApp.directive("chart", function() {
+    return {
+        link: function($scope, $elm, $attr) {
+            var isLoaded = false;
+            var interval = setInterval(function() {
+                if (google.visualization) {
+                    isLoaded = true;
+                    clearInterval(interval);
+                }
+                if (isLoaded) {
+                    console.log($scope);
+                    var data = new google.visualization.DataTable();
+                    var keys = [];
+                    for (var i in $scope.event_data_head) {
+                        keys.push($scope.event_data_head[i]);
+                        data.addColumn("string", $scope.event_data_head[i]);
+                    }
+                    var rows = [];
+                    for (var i in $scope.event_data_list) {
+                        var row = [];
+                        for (var k in keys) {
+                            row.push($scope.event_data_list[i][keys[k]].toString());
+                        }
+                        rows.push(row);
+                    }
+                    data.addRows(rows);
+                    var table = new google.visualization.Table($elm[0]);
+                    table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+                }
+            }, 300);
+        }
+    }
+});
+
+
 
 dssApp.controller("newAppCtrl", function ($scope, $http, $routeParams) {
     console.log("success");
