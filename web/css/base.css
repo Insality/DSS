@@ -5,3 +5,7 @@ body {
 .button_selected {
 	border: 2px solid blue;
 }
+
+#url-string {
+	color: #aaaaaa;
+}

@@ -4,6 +4,19 @@
         <a href="#/">Applications</a> / <a href="#/app/{{app_name}}">Events</a>
     </nav>
 
+    <p>
+
+        Use this curl to send data:<br>
+        <span id="url-string">
+            curl -X POST -d '{
+                <span ng-repeat="ev_data_key in event_data_head">
+                    "{{ev_data_key}}": "value",
+                </span>
+                "app_key": "defold"}' <br>
+            -H "Content-Type: application/json" <br>
+            {{url_string}}
+        </span>
+    </p>
     <h2>Events data:</h2>
 
     <div id="chart2" class="events-data">

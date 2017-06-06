@@ -24,7 +24,6 @@ function Connect(uri){
 function Put(app, eventName, json, eventKeys){
 	var tableName = GetTableName(app, eventName);
 	var record = cluster.openBucker(tableName;)
-	// var record = database.collection(tableName);
 
 	// check unique:
 	var uniquePart = {};

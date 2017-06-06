@@ -25,7 +25,8 @@ function StandartEventPost(req, res, e, app){
 		"optional": e["event_fields_optional"]
 	};
 	var errorMsg = [];
-	
+	var options = {};
+
 	if (utils.EventJsonIsValid(req.body, eventKeys, errorMsg)){
 		if (!CheckPassword(req.body, app)) {
 			res.send(utils.GetErrorMessage(25));
@@ -41,7 +42,18 @@ function StandartEventPost(req, res, e, app){
 			}
 		}
 		utils.AddMetadata(newJson);
-		dbController.Put(app["app_name"], e["event_name"], newJson, eventKeys);
+
+		// strategy: {"field": "score", "type": "more"}
+		if (e["strategy"]) {
+			filter["options"]["strategy"] = e["strategy"];
+		}
+
+		// counter: {"field": "amount"}
+		if (e["counter"]) {
+			filter["options"]["counter"] = e["counter"];
+		}
+
+		dbController.Put(app["app_name"], e["event_name"], newJson, eventKeys, options);
 		res.send(utils.GetOkMessage());
 	} else {
 		res.send(utils.GetErrorMessage(21, errorMsg));
@@ -51,7 +63,6 @@ function StandartEventPost(req, res, e, app){
 
 function StandartEventStatGet(req, res, e, app, stat){
 	var eventKeys = GetAllEventKeys(e);
-	// eventKeys.push("date");
 
 	filter = {};
 	filter["options"] = {};
@@ -88,6 +99,7 @@ function StandartEventStatGet(req, res, e, app, stat){
 				filter["date"] = {"$gte": startDate};
 				break;
 			case "Period":
+				filter["options"]["period"] = args[0];
 				break;
 			case "Count":
 				filter["options"]["count"] = true;
